@@ -341,7 +341,7 @@ class Steganography
   for (int i = 0; i < imageRGB.length; i++)
   {
    int encodeData = (encodeRGB[i] & encodeMask) >>> (8 - encodeBits);
-   imageRGB[i] = (imageRGB[i] & hostMask) | (encodeData & ~hostMask);
+   imageRGB[i] = (imageRGB[i] & hostMask) | (encodeData);
   }
 
   image.setRGB(0, 0, image.getWidth(null), image.getHeight(null), imageRGB, 0, image.getWidth(null));
@@ -372,11 +372,11 @@ class Steganography
 
   int decodeByteMask = ~(encodeByteMask >>> (8 - encodeBits)) & 0xFF;
   int hostMask = (decodeByteMask << 24) | (decodeByteMask << 16) | (decodeByteMask << 8) | decodeByteMask;
-
+  int hostMask2 = hostMask >>> encodeBits;
   for (int i = 0; i < imageRGB.length; i++)
   {
-   int encodeData = (encodeRGB[i] & encodeMask) >>> (8 - encodeBits);
-   imageRGB[i] = (imageRGB[i] & hostMask) | (encodeData & ~hostMask);
+   int encodeData = (encodeRGB[i] & encodeMask);
+   imageRGB[i] = (imageRGB[i] & hostMask2) | (encodeData);
   }
 
   image.setRGB(0, 0, image.getWidth(null), image.getHeight(null), imageRGB, 0, image.getWidth(null));
@@ -386,12 +386,15 @@ class Steganography
  {
   int[] imageRGB = image.getRGB(0, 0, image.getWidth(null), image.getHeight(null), null, 0, image.getWidth(null));
 
-  int maskBits = (int)(Math.pow(2, bits)) - 1 << (8 - bits);
-  int mask = (maskBits << 24) | (maskBits << 16) | (maskBits << 8) | maskBits;
+   int encodeByteMask = (int)(Math.pow(2, bits)) - 1 << (8 - bits);
+  int encodeMask = (encodeByteMask << 24) | (encodeByteMask << 16) | (encodeByteMask << 8) | encodeByteMask;
+
+  int decodeByteMask = ~(encodeByteMask >>> (8 - bits)) & 0xFF;
+  int hostMask = (decodeByteMask << 24) | (decodeByteMask << 16) | (decodeByteMask << 8) | decodeByteMask;
 
   for (int i = 0; i < imageRGB.length; i++)
   {
-   imageRGB[i] = imageRGB[i] & mask;
+   imageRGB[i] = imageRGB[i] & ~hostMask;
   }
 
   image.setRGB(0, 0, image.getWidth(null), image.getHeight(null), imageRGB, 0, image.getWidth(null));
@@ -407,11 +410,11 @@ class Steganography
 
   int decodeByteMask = ~(encodeByteMask >>> (8 - encodeBits)) & 0xFF;
   int hostMask = (decodeByteMask << 24) | (decodeByteMask << 16) | (decodeByteMask << 8) | decodeByteMask;
-
+  int hostMask2 = hostMask >>> encodeBits;
   for (int i = 0; i < imageRGB.length; i++)
   {
-   int encodeData = (encodeRGB[i] & encodeMask) >>> (8 - encodeBits);
-   imageRGB[i] = (imageRGB[i] & hostMask) | (encodeData & ~hostMask);
+   int encodeData = (encodeRGB[i] & ~hostMask) << (8 - encodeBits);
+   imageRGB[i] = (imageRGB[i] & hostMask2) | (encodeData);
   }
 
   image.setRGB(0, 0, image.getWidth(null), image.getHeight(null), imageRGB, 0, image.getWidth(null));
@@ -421,12 +424,15 @@ class Steganography
  {
   int[] imageRGB = image.getRGB(0, 0, image.getWidth(null), image.getHeight(null), null, 0, image.getWidth(null));
 
-  int maskBits = (int)(Math.pow(2, bits)) - 1 << (8 - bits);
-  int mask = (maskBits << 24) | (maskBits << 16) | (maskBits << 8) | maskBits;
+   int encodeByteMask = (int)(Math.pow(2, bits)) - 1 << (8 - bits);
+  int encodeMask = (encodeByteMask << 24) | (encodeByteMask << 16) | (encodeByteMask << 8) | encodeByteMask;
+
+  int decodeByteMask = ~(encodeByteMask >>> (8 - bits)) & 0xFF;
+  int hostMask = (decodeByteMask << 24) | (decodeByteMask << 16) | (decodeByteMask << 8) | decodeByteMask;
 
   for (int i = 0; i < imageRGB.length; i++)
   {
-   imageRGB[i] = imageRGB[i] & mask;
+   imageRGB[i] = imageRGB[i] & ~hostMask;
   }
 
   image.setRGB(0, 0, image.getWidth(null), image.getHeight(null), imageRGB, 0, image.getWidth(null));
@@ -442,11 +448,11 @@ class Steganography
 
   int decodeByteMask = ~(encodeByteMask >>> (8 - encodeBits)) & 0xFF;
   int hostMask = (decodeByteMask << 24) | (decodeByteMask << 16) | (decodeByteMask << 8) | decodeByteMask;
-
+   int hostMask2 = hostMask >>> encodeBits;
   for (int i = 0; i < imageRGB.length; i++)
   {
-   int encodeData = (encodeRGB[i] & encodeMask) >>> (8 - encodeBits);
-   imageRGB[i] = (imageRGB[i] & hostMask) | (encodeData & ~hostMask);
+   int encodeData = (encodeRGB[i] & ~hostMask);
+   imageRGB[i] = (imageRGB[i] & hostMask) | (encodeData);
   }
 
   image.setRGB(0, 0, image.getWidth(null), image.getHeight(null), imageRGB, 0, image.getWidth(null));
